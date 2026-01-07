@@ -1,24 +1,24 @@
 import { goto } from "$app/navigation";
 import { auth } from "./stores/auth";
-import type { Transaction, NewTransaction, NewUser, User, Category, NewCategory } from "./types";
+import type { Mass, NewMass, NewUser, User } from "./types";
 
 const API_BASE = '/api';
 
-export async function getTransactions(): Promise<Transaction[]> {
-    const res = await fetch(`${API_BASE}/transactions`, {
+export async function getMasses(): Promise<Mass[]> {
+    const res = await fetch(`${API_BASE}/masses`, {
         credentials: 'include'
     });
-    if (!res.ok) throw new Error('Failed to fetch transactions');
+    if (!res.ok) throw new Error('Failed to fetch masses');
     return await res.json();
 }
 
-export async function createTransaction(payload: NewTransaction): Promise<Transaction> {
+export async function createMass(payload: NewMass): Promise<Mass> {
     // Convert timestamp to ISO format (UTC) if present
     if (payload.created_at) {
         payload.created_at = new Date(payload.created_at).toISOString();
     }
 
-    const res = await fetch(`${API_BASE}/transactions`, {
+    const res = await fetch(`${API_BASE}/masses`, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify(payload),
@@ -26,7 +26,7 @@ export async function createTransaction(payload: NewTransaction): Promise<Transa
     });
 
     if (!res.ok) {
-        throw new Error('Failed to create transaction');
+        throw new Error('Failed to create mass');
     }
 
     return await res.json();
@@ -91,38 +91,15 @@ export async function load_user(): Promise<{user: User | null}> {
     }
 };
 
-export async function getCategories(): Promise<Category[]> {
-    const res = await fetch(`${API_BASE}/categories`, {
-        credentials: 'include'
-    });
-    if (!res.ok) throw new Error('Failed to fetch categories');
-    return await res.json();
-}
-
-export async function createCategory(payload: NewCategory): Promise<Category> {
-    const res = await fetch(`${API_BASE}/categories`, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify(payload),
-        credentials: 'include',
-    });
-
-    if (!res.ok) {
-        throw new Error('Failed to create category');
-    }
-
-    return await res.json();
-}
-
-export async function getTransaction(id: string): Promise<Transaction> {
-    const res = await fetch(`${API_BASE}/transactions/${id}`, {
+export async function getMass(id: string): Promise<Mass> {
+    const res = await fetch(`${API_BASE}/masses/${id}`, {
         credentials: 'include'
     });
     return await res.json();
 }
 
-export async function updateTransaction(id: string, data: NewTransaction) {
-    await fetch(`${API_BASE}/transactions/${id}`, {
+export async function updateMass(id: string, data: NewMass) {
+    await fetch(`${API_BASE}/masses/${id}`, {
         method: 'PUT',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify(data),
@@ -130,42 +107,11 @@ export async function updateTransaction(id: string, data: NewTransaction) {
     });
 }
 
-export async function deleteTransaction(id: string) {
-    await fetch(`${API_BASE}/transactions/${id}`, {
+export async function deleteMass(id: string) {
+    await fetch(`${API_BASE}/masses/${id}`, {
         method: 'DELETE',
         credentials: 'include'
     });
-}
-
-export async function getCategory(id: string): Promise<Category> {
-    const res = await fetch(`${API_BASE}/categories/${id}`, {
-        credentials: 'include'
-    });
-    return await res.json();
-}
-
-export async function updateCategory(id: string, data: NewCategory) {
-    await fetch(`${API_BASE}/categories/${id}`, {
-        method: 'PUT',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify(data),
-        credentials: 'include'
-    });
-}
-
-export async function deleteCategory(id: string) {
-    await fetch(`${API_BASE}/categories/${id}`, {
-        method: 'DELETE',
-        credentials: 'include'
-    });
-}
-
-export async function getCategoryTransactions(category_id: string): Promise<Transaction[]> {
-    const res = await fetch(`${API_BASE}/categories/${category_id}/transactions`, {
-        credentials: 'include'
-    });
-    if (!res.ok) throw new Error('Failed to fetch transactions');
-    return await res.json();
 }
 
 export async function uploadUserData(payload: string) {

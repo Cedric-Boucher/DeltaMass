@@ -13,7 +13,7 @@
     onMount(async () => {
         await check_login();
         if ($auth.isLoggedIn) {
-            goto('/transactions');
+            goto('/masses');
         }
     });
 
@@ -34,7 +34,7 @@
         try {
             await signup(payload);
             success = true;
-            goto('/transactions');
+            goto('/masses');
         } catch (e) {
             const err = e as Error;
             error = err.message;

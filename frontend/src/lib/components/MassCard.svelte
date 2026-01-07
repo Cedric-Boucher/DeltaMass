@@ -1,10 +1,10 @@
 <script lang="ts">
-    import type { Transaction } from '$lib/types';
+    import type { Mass } from '$lib/types';
     import { formatTimestampLocalForDisplay } from '$lib/utils';
     import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 
-    export let transaction: Transaction;
+    export let mass: Mass;
     export let showActions: boolean = true;
 
     // Optional overrides
@@ -15,7 +15,7 @@
         if (onEdit) {
             onEdit();
         } else {
-            goto(`/transactions/${transaction.id}/edit?redirectTo=${encodeURIComponent(page.url.pathname)}`);
+            goto(`/masses/${mass.id}/edit?redirectTo=${encodeURIComponent(page.url.pathname)}`);
         }
     }
 
@@ -23,20 +23,16 @@
         if (onDelete) {
             onDelete();
         } else {
-            goto(`/transactions/${transaction.id}/delete?redirectTo=${encodeURIComponent(page.url.pathname)}`);
+            goto(`/masses/${mass.id}/delete?redirectTo=${encodeURIComponent(page.url.pathname)}`);
         }
     }
 </script>
 
 <li class="bg-white dark:bg-gray-800 shadow rounded p-4 flex justify-between items-start gap-4">
-    <!-- Left: transaction details -->
+    <!-- Left: mass details -->
     <div>
-        <div class="text-2xl font-bold">{transaction.category.name}</div>
-        <div class="font-medium">{transaction.description}</div>
-        <div class={transaction.amount > 0 ? 'text-green-600 font-bold text-xl' : 'text-red-600 font-bold text-xl'}>
-            ${transaction.amount.toFixed(2)}
-        </div>
-        <div class="text-gray-500 text-sm">{formatTimestampLocalForDisplay(transaction.created_at)}</div>
+        <div class="text-2xl font-bold">{mass.mass_kg.toFixed(1)} Kg</div>
+    <div class="text-gray-500 text-sm">{formatTimestampLocalForDisplay(mass.measurement_timestamp)}</div>
     </div>
 
     <!-- Right: actions -->

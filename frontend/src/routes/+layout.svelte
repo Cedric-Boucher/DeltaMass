@@ -42,7 +42,7 @@
 </script>
 
 <svelte:head>
-    <title>Expense Control Unit</title>
+    <title>DeltaMass</title>
     <link
         rel="icon"
         href={darkMode ? "/favicon-dark.svg" : "/favicon-light.svg"}
@@ -54,11 +54,8 @@
     <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
         {#if $auth.isLoggedIn}
             <div class="flex gap-4">
-                <button onclick={() => goto('/transactions')} class={navButtonClasses('/transactions')}>
-                    Transactions
-                </button>
-                <button onclick={() => goto('/categories')} class={navButtonClasses('/categories')}>
-                    Categories
+                <button onclick={() => goto('/masses')} class={navButtonClasses('/masses')}>
+                    Masses
                 </button>
             </div>
         {/if}

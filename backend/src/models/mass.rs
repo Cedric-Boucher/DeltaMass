@@ -12,5 +12,5 @@ pub struct Mass {
 #[derive(Deserialize)]
 pub struct NewMass {
     pub mass_kg: f64,
-    pub measurement_timestamp: DateTime<Utc>,
+    pub measurement_timestamp: Option<DateTime<Utc>>,
 }

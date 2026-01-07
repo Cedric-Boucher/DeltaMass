@@ -55,7 +55,7 @@ pub async fn create_mass(
         "#,
         user.id,
         BigDecimal::from_f64(payload.mass_kg),
-        convert_chrono_to_time(payload.measurement_timestamp),
+        payload.measurement_timestamp.map(convert_chrono_to_time),
     )
     .fetch_one(&pool)
     .await
@@ -137,7 +137,7 @@ async fn update_mass(
         RETURNING id, mass_kg, measurement_timestamp, created_at
         "#,
         BigDecimal::from_f64(payload.mass_kg),
-        convert_chrono_to_time(payload.measurement_timestamp),
+        payload.measurement_timestamp.map(convert_chrono_to_time),
         id
     )
     .fetch_one(&pool)

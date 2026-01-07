@@ -1,26 +1,26 @@
 <script lang="ts">
     import { page } from '$app/state';
-    import { getTransaction, deleteTransaction } from '$lib/api';
+    import { getMass, deleteMass } from '$lib/api';
     import { goto } from '$app/navigation';
     import { onMount } from 'svelte';
-    import type { Transaction } from '$lib/types';
-	import TransactionCard from '$lib/components/TransactionCard.svelte';
+    import type { Mass } from '$lib/types';
+	import MassCard from '$lib/components/MassCard.svelte';
 
-    let transaction: Transaction | null = null;
+    let mass: Mass | null = null;
     let error = '';
     let loading = true;
 
     const id = page.params.id;
-    const redirectTo = page.url.searchParams.get('redirectTo') ?? '/transactions';
+    const redirectTo = page.url.searchParams.get('redirectTo') ?? '/masses';
 
     onMount(async () => {
         if (!id) {
             goto(redirectTo);
         } else {
             try {
-                transaction = await getTransaction(id);
+                mass = await getMass(id);
             } catch (e) {
-                error = 'Failed to load transaction.';
+                error = 'Failed to load mass.';
                 console.error(e);
             } finally {
                 loading = false;
@@ -31,11 +31,11 @@
     async function confirmDelete() {
         try {
             if (id) {
-                await deleteTransaction(id);
+                await deleteMass(id);
             }
             goto(redirectTo);
         } catch (e) {
-            error = 'Failed to delete transaction.';
+            error = 'Failed to delete mass.';
             console.error(e);
         }
     }
@@ -49,11 +49,11 @@
     <p>Loading...</p>
 {:else if error}
     <p class="text-red-600">{error}</p>
-{:else if transaction}
-    <h1 class="text-2xl font-bold mb-4">Delete Transaction</h1>
-    <p class="mb-2">Are you sure you want to delete the following transaction?</p>
+{:else if mass}
+    <h1 class="text-2xl font-bold mb-4">Delete Mass</h1>
+    <p class="mb-2">Are you sure you want to delete the following mass?</p>
 
-    <TransactionCard {transaction} showActions={false} />
+    <MassCard {mass} showActions={false} />
 
     <div class="flex space-x-4">
         <button
@@ -70,5 +70,5 @@
         </button>
     </div>
 {:else}
-    <p class="text-gray-500 italic">Transaction not found.</p>
+    <p class="text-gray-500 italic">Mass not found.</p>
 {/if}

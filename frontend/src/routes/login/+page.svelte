@@ -12,7 +12,7 @@
     onMount(async () => {
         await check_login();
         if ($auth.isLoggedIn) {
-            goto('/transactions');
+            goto('/masses');
         }
     });
 
@@ -31,7 +31,7 @@
 
         try {
             await login(payload);
-            goto('/transactions');
+            goto('/masses');
         } catch (e) {
             error = 'Invalid credentials';
             console.error(e);

@@ -1,5 +1,5 @@
 import { redirect } from '@sveltejs/kit';
-import { getTransactions, load_user } from '$lib/api';
+import { getMasses, load_user } from '$lib/api';
 import type { PageLoad } from './$types';
 
 export const load: PageLoad = async () => {
@@ -9,6 +9,6 @@ export const load: PageLoad = async () => {
         throw redirect(302, '/login');
     }
 
-    const transactions = await getTransactions();
-    return { transactions };
+    const masses = await getMasses();
+    return { masses };
 };

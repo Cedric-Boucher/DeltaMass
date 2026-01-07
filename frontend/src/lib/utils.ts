@@ -1,6 +1,6 @@
 import { format } from 'date-fns';
-import { getTransactions, getCategories, uploadUserData } from '$lib/api';
-import type { Category, Transaction } from '$lib/types';
+import { getMasses, uploadUserData } from '$lib/api';
+import type { Mass } from '$lib/types';
 import { invalidateAll } from '$app/navigation';
 
 export function formatTimestampLocal(isoString: string): string {
@@ -15,14 +15,12 @@ export function formatTimestampLocalForDisplay(isoString: string): string {
 
 export async function exportUserDataToFile() {
     try {
-        const [transactions, categories]: [Transaction[], Category[]] = await Promise.all([
-            getTransactions(),
-            getCategories()
+        const [masses]: [Mass[]] = await Promise.all([
+            getMasses()
         ]);
 
         const exportData = {
-            transactions,
-            categories
+            masses
         };
 
         const json = JSON.stringify(exportData, null, 2);
