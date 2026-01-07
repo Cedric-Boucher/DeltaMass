@@ -2,12 +2,13 @@
     import type { Mass } from '$lib/types';
     import { formatTimestampLocalForDisplay } from '$lib/utils';
     import { goto } from '$app/navigation';
-	import { page } from '$app/state';
+    import { page } from '$app/state';
+
+    import { selectedUnit, formatMass, UNIT_LABELS } from '$lib/stores/units';
 
     export let mass: Mass;
     export let showActions: boolean = true;
 
-    // Optional overrides
     export let onEdit: (() => void) | null = null;
     export let onDelete: (() => void) | null = null;
 
@@ -29,13 +30,13 @@
 </script>
 
 <li class="bg-white dark:bg-gray-800 shadow rounded p-4 flex justify-between items-start gap-4">
-    <!-- Left: mass details -->
     <div>
-        <div class="text-2xl font-bold">{mass.mass_kg.toFixed(1)} Kg</div>
-    <div class="text-gray-500 text-sm">{formatTimestampLocalForDisplay(mass.measurement_timestamp)}</div>
+        <div class="text-2xl font-bold">
+            {formatMass(mass.mass_kg, $selectedUnit)} {UNIT_LABELS[$selectedUnit]}
+        </div>
+        <div class="text-gray-500 text-sm">{formatTimestampLocalForDisplay(mass.measurement_timestamp)}</div>
     </div>
 
-    <!-- Right: actions -->
     {#if showActions}
         <div class="flex flex-col gap-2">
             <button
