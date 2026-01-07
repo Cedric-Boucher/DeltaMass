@@ -1,0 +1,40 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT\n            id as mass_id,\n            mass_kg,\n            masses.measurement_timestamp as mass_measurement_timestamp,\n            masses.created_at as mass_created_at\n        FROM masses\n        WHERE masses.user_id = $1\n        ORDER BY masses.measurement_timestamp DESC\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "mass_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "mass_kg",
+        "type_info": "Numeric"
+      },
+      {
+        "ordinal": 2,
+        "name": "mass_measurement_timestamp",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 3,
+        "name": "mass_created_at",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "5568610c8e0748ca5ade1afc204f54431f53a64751bc8026515495f4c6d4d25e"
+}

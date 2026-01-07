@@ -3,9 +3,9 @@ services:
     image: postgres:17
     restart: unless-stopped
     environment:
-      POSTGRES_USER: finance_user
-      POSTGRES_PASSWORD: finance_pass
-      POSTGRES_DB: finance_db
+      POSTGRES_USER: deltamass_user
+      POSTGRES_PASSWORD: deltamass_pass
+      POSTGRES_DB: deltamass_db
     volumes:
       - db_data:/var/lib/postgresql/data
     ports:
@@ -17,7 +17,7 @@ services:
       dockerfile: Dockerfile.backend
     restart: unless-stopped
     environment:
-      - DATABASE_URL=postgres://finance_user:finance_pass@db:5432/finance_db
+      - DATABASE_URL=postgres://deltamass_user:deltamass_pass@db:5432/deltamass_db
       - PORT=8000
     depends_on:
       - db

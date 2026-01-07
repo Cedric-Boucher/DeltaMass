@@ -2,13 +2,15 @@ use chrono::{DateTime, Utc};
 use serde::{Serialize, Deserialize};
 
 #[derive(Serialize, sqlx::FromRow)]
-pub struct Category {
+pub struct Mass {
     pub id: i32,
-    pub name: String,
+    pub mass_kg: f64,
+    pub measurement_timestamp: DateTime<Utc>,
     pub created_at: DateTime<Utc>,
 }
 
 #[derive(Deserialize)]
-pub struct NewCategory {
-    pub name: String,
+pub struct NewMass {
+    pub mass_kg: f64,
+    pub measurement_timestamp: DateTime<Utc>,
 }

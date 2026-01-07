@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "\n        SELECT id FROM categories\n        WHERE id = $1 AND user_id = $2\n        ",
+  "query": "\n        SELECT id FROM masses\n        WHERE id = $1 AND user_id = $2\n        ",
   "describe": {
     "columns": [
       {
@@ -19,5 +19,5 @@
       false
     ]
   },
-  "hash": "ea39f4cd8429b2bc9c1f54e8afd9608e3c5f03d875542cb1b5d2d9db7e54ad00"
+  "hash": "2485856a3e515aa9f6c296cc9238b2d8e7cb481a4e444743fbe9cd7f651a06f6"
 }

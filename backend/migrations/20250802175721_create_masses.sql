@@ -1,9 +1,8 @@
 -- Add migration script here
-CREATE TABLE transactions (
+CREATE TABLE masses (
     id SERIAL PRIMARY KEY,
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    category_id INTEGER NOT NULL REFERENCES categories(id) ON DELETE RESTRICT,
-    description TEXT NOT NULL,
-    amount NUMERIC NOT NULL,
+    mass_kg NUMERIC NOT NULL,
+    measurement_timestamp TIMESTAMPTZ NOT NULL DEFAULT now(),
     created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
