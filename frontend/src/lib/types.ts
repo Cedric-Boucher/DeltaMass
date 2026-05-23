@@ -1,24 +1,24 @@
 export type Mass = {
-    id: number;
-    mass_kg: number;
-    measurement_timestamp: string;
-    created_at: string;
+	id: number;
+	mass_kg: number;
+	measurement_timestamp: string;
+	created_at: string;
 };
 
 export type NewMass = {
-    mass_kg: number;
-    measurement_timestamp?: string;
-    created_at?: string;
+	mass_kg: number;
+	measurement_timestamp?: string;
+	created_at?: string;
 };
 
 export type NewUser = {
-    username: string;
-    password: string;
+	username: string;
+	password: string;
 };
 
 export type User = {
-    id: string;
-    username: string;
-    password_hash: string;
-    created_at: string;
+	id: string;
+	username: string;
+	password_hash: string;
+	created_at: string;
 };
