@@ -2,33 +2,38 @@
 	import { page } from '$app/state';
 	import { getMass, deleteMass } from '$lib/api';
 	import { goto } from '$app/navigation';
-	import { onMount } from 'svelte';
 	import type { Mass } from '$lib/types';
 	import MassCard from '$lib/components/MassCard.svelte';
 	import { resolve } from '$app/paths';
 	import type { Pathname } from '$app/types';
 
-	let mass: Mass | null = null;
-	let error = '';
-	let loading = true;
+	let mass = $state<Mass | null>(null);
+	let error = $state('');
+	let loading = $state(true);
 
-	const id = page.params.id;
-	const redirectTo = (page.url.searchParams.get('redirectTo') ?? '/masses') as Pathname;
+	let id = $derived(page.params.id);
+	let redirectTo = $derived((page.url.searchParams.get('redirectTo') ?? '/masses') as Pathname);
 
-	onMount(async () => {
+	$effect(() => {
 		if (!id) {
-			goto(resolve(redirectTo));
+			if (redirectTo) goto(resolve(redirectTo));
 		} else {
-			try {
-				mass = await getMass(id);
-			} catch (e) {
-				error = 'Failed to load mass.';
-				console.error(e);
-			} finally {
-				loading = false;
-			}
+			loadData(id);
 		}
 	});
+
+	async function loadData(currentId: string) {
+		loading = true;
+		error = '';
+		try {
+			mass = await getMass(currentId);
+		} catch (e) {
+			error = 'Failed to load mass.';
+			console.error(e);
+		} finally {
+			loading = false;
+		}
+	}
 
 	async function confirmDelete() {
 		try {

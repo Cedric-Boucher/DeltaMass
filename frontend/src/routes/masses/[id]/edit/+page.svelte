@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import { page } from '$app/state';
 	import { getMass, updateMass } from '$lib/api';
 	import { goto } from '$app/navigation';
@@ -8,17 +7,27 @@
 	import { resolve } from '$app/paths';
 	import type { Pathname } from '$app/types';
 
-	let mass: Mass | null = null;
-	const id = page.params.id;
-	const redirectTo = (page.url.searchParams.get('redirectTo') ?? '/masses') as Pathname;
+	let mass = $state<Mass | null>(null);
 
-	onMount(async () => {
+	let id = $derived(page.params.id);
+	let redirectTo = $derived((page.url.searchParams.get('redirectTo') ?? '/masses') as Pathname);
+
+	$effect(() => {
 		if (id) {
-			mass = await getMass(id);
+			loadData(id);
 		} else {
-			goto(resolve(redirectTo));
+			if (redirectTo) goto(resolve(redirectTo));
 		}
 	});
+
+	async function loadData(currentId: string) {
+		mass = null;
+		try {
+			mass = await getMass(currentId);
+		} catch (e) {
+			console.error('Failed to load mass:', e);
+		}
+	}
 
 	async function handleUpdate(data: NewMass) {
 		if (id) {
