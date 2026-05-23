@@ -1,6 +1,6 @@
-import { goto } from "$app/navigation";
-import { auth } from "./stores/auth";
-import type { Mass, NewMass, NewUser, User } from "./types";
+import { goto } from '$app/navigation';
+import { auth } from './stores/auth';
+import type { Mass, NewMass, NewUser, User } from './types';
 
 const API_BASE = '/api';
 
@@ -22,7 +22,7 @@ export async function createMass(payload: NewMass): Promise<Mass> {
 		method: 'POST',
 		headers: { 'content-type': 'application/json' },
 		body: JSON.stringify(payload),
-		credentials: 'include',
+		credentials: 'include'
 	});
 
 	if (!res.ok) {
@@ -37,7 +37,7 @@ export async function login(payload: NewUser): Promise<void> {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify(payload),
-		credentials: 'include',
+		credentials: 'include'
 	});
 
 	if (res.ok) {
@@ -52,7 +52,7 @@ export async function signup(payload: NewUser): Promise<void> {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify(payload),
-		credentials: 'include',
+		credentials: 'include'
 	});
 
 	if (res.ok) {
@@ -65,7 +65,7 @@ export async function signup(payload: NewUser): Promise<void> {
 export async function logout(): Promise<void> {
 	await fetch(`${API_BASE}/logout`, {
 		method: 'POST',
-		credentials: 'include',
+		credentials: 'include'
 	});
 	auth.set({ isLoggedIn: false });
 	goto('/login');
@@ -119,7 +119,7 @@ export async function uploadUserData(payload: string) {
 	const res = await fetch(`${API_BASE}/import`, {
 		method: 'POST',
 		headers: {
-			'content-type': 'application/json',
+			'content-type': 'application/json'
 		},
 		body: JSON.stringify(data),
 		credentials: 'include'
