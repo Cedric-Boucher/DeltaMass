@@ -28,7 +28,7 @@ export async function exportUserDataToFile() {
 
 		const a = document.createElement('a');
 		a.href = url;
-		a.download = `ECU-export-${new Date().toISOString()}.json`;
+		a.download = `DeltaMass-export-${new Date().toISOString()}.json`;
 		document.body.appendChild(a);
 		a.click();
 
