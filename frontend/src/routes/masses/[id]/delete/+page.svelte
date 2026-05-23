@@ -6,13 +6,14 @@
 	import type { Mass } from '$lib/types';
 	import MassCard from '$lib/components/MassCard.svelte';
 	import { resolve } from '$app/paths';
+	import type { Pathname } from '$app/types';
 
 	let mass: Mass | null = null;
 	let error = '';
 	let loading = true;
 
 	const id = page.params.id;
-	const redirectTo = page.url.searchParams.get('redirectTo') ?? '/masses';
+	const redirectTo = (page.url.searchParams.get('redirectTo') ?? '/masses') as Pathname;
 
 	onMount(async () => {
 		if (!id) {

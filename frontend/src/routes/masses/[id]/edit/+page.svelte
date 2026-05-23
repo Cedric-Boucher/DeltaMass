@@ -6,10 +6,11 @@
 	import MassForm from '$lib/components/MassForm.svelte';
 	import type { NewMass, Mass } from '$lib/types';
 	import { resolve } from '$app/paths';
+	import type { Pathname } from '$app/types';
 
 	let mass: Mass | null = null;
 	const id = page.params.id;
-	const redirectTo = page.url.searchParams.get('redirectTo') ?? '/masses';
+	const redirectTo = (page.url.searchParams.get('redirectTo') ?? '/masses') as Pathname;
 
 	onMount(async () => {
 		if (id) {
