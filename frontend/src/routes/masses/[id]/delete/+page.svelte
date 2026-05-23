@@ -5,6 +5,7 @@
 	import { onMount } from 'svelte';
 	import type { Mass } from '$lib/types';
 	import MassCard from '$lib/components/MassCard.svelte';
+	import { resolve } from '$app/paths';
 
 	let mass: Mass | null = null;
 	let error = '';
@@ -15,7 +16,7 @@
 
 	onMount(async () => {
 		if (!id) {
-			goto(redirectTo);
+			goto(resolve(redirectTo));
 		} else {
 			try {
 				mass = await getMass(id);
@@ -33,7 +34,7 @@
 			if (id) {
 				await deleteMass(id);
 			}
-			goto(redirectTo);
+			goto(resolve(redirectTo));
 		} catch (e) {
 			error = 'Failed to delete mass.';
 			console.error(e);
@@ -41,7 +42,7 @@
 	}
 
 	function cancel() {
-		goto(redirectTo);
+		goto(resolve(redirectTo));
 	}
 </script>
 
@@ -57,13 +58,13 @@
 
 	<div class="flex space-x-4">
 		<button
-			on:click={confirmDelete}
+			onclick={confirmDelete}
 			class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
 		>
 			Yes, Delete
 		</button>
 		<button
-			on:click={cancel}
+			onclick={cancel}
 			class="bg-gray-300 dark:bg-gray-700 text-black dark:text-white px-4 py-2 rounded hover:bg-gray-400 dark:hover:bg-gray-600"
 		>
 			Cancel

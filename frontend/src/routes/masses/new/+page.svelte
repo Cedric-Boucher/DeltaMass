@@ -3,14 +3,15 @@
 	import { createMass } from '$lib/api';
 	import { goto } from '$app/navigation';
 	import type { NewMass } from '$lib/types';
+	import { resolve } from '$app/paths';
 
 	async function handleCreate(payload: NewMass) {
 		await createMass(payload);
-		goto('/masses');
+		goto(resolve('/masses'));
 	}
 
 	function cancel() {
-		goto('/masses');
+		goto(resolve('/masses'));
 	}
 </script>
 

@@ -5,6 +5,7 @@
 	import { page } from '$app/state';
 
 	import { selectedUnit, formatMass, UNIT_LABELS } from '$lib/stores/units';
+	import { resolve } from '$app/paths';
 
 	export let mass: Mass;
 	export let showActions: boolean = true;
@@ -16,7 +17,7 @@
 		if (onEdit) {
 			onEdit();
 		} else {
-			goto(`/masses/${mass.id}/edit?redirectTo=${encodeURIComponent(page.url.pathname)}`);
+			goto(resolve(`/masses/${mass.id}/edit?redirectTo=${encodeURIComponent(page.url.pathname)}`));
 		}
 	}
 
@@ -24,7 +25,9 @@
 		if (onDelete) {
 			onDelete();
 		} else {
-			goto(`/masses/${mass.id}/delete?redirectTo=${encodeURIComponent(page.url.pathname)}`);
+			goto(
+				resolve(`/masses/${mass.id}/delete?redirectTo=${encodeURIComponent(page.url.pathname)}`)
+			);
 		}
 	}
 </script>
@@ -45,14 +48,14 @@
 			<button
 				type="button"
 				class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-				on:click={handleEdit}
+				onclick={handleEdit}
 			>
 				Edit
 			</button>
 			<button
 				type="button"
 				class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
-				on:click={handleDelete}
+				onclick={handleDelete}
 			>
 				Delete
 			</button>

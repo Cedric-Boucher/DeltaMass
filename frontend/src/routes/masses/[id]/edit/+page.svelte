@@ -5,6 +5,7 @@
 	import { goto } from '$app/navigation';
 	import MassForm from '$lib/components/MassForm.svelte';
 	import type { NewMass, Mass } from '$lib/types';
+	import { resolve } from '$app/paths';
 
 	let mass: Mass | null = null;
 	const id = page.params.id;
@@ -14,7 +15,7 @@
 		if (id) {
 			mass = await getMass(id);
 		} else {
-			goto(redirectTo);
+			goto(resolve(redirectTo));
 		}
 	});
 
@@ -22,11 +23,11 @@
 		if (id) {
 			await updateMass(id, data);
 		}
-		goto(redirectTo);
+		goto(resolve(redirectTo));
 	}
 
 	function cancel() {
-		goto(redirectTo);
+		goto(resolve(redirectTo));
 	}
 </script>
 

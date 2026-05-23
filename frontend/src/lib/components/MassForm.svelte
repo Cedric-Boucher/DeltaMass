@@ -112,7 +112,7 @@
 	}
 </script>
 
-<form on:submit|preventDefault={submit} class="space-y-4 max-w-md">
+<form onsubmit={submit} class="space-y-4 max-w-md">
 	<div>
 		<label for="mass" class="block font-medium">Mass</label>
 		<div class="flex gap-2">
@@ -121,7 +121,7 @@
 				type="text"
 				inputmode="numeric"
 				bind:value={$massValue}
-				on:input={(e) => {
+				oninput={(e) => {
 					const input = e.target as HTMLInputElement;
 					massValue.set(formatNumberString(input.value.toString()));
 					input.value = get(massValue);
@@ -133,7 +133,7 @@
 			<div class="relative w-24">
 				<select
 					value={unit}
-					on:change={handleUnitChange}
+					onchange={handleUnitChange}
 					class="w-full h-full p-2 border rounded appearance-none bg-gray-50 dark:bg-gray-700 dark:border-gray-600 text-gray-900 dark:text-gray-100 pr-8"
 				>
 					<option value="kg">Kg</option>
@@ -160,8 +160,8 @@
 			bind:value={$timestamp}
 			step="1"
 			class="w-full p-2 border rounded"
-			on:focus={handleTimestampFocusOrInput}
-			on:input={handleTimestampFocusOrInput}
+			onfocus={handleTimestampFocusOrInput}
+			oninput={handleTimestampFocusOrInput}
 		/>
 	</div>
 
@@ -172,7 +172,7 @@
 		{#if showCancel}
 			<button
 				type="button"
-				on:click={onCancel}
+				onclick={onCancel}
 				class="bg-gray-300 dark:bg-gray-700 text-black dark:text-white px-4 py-2 rounded hover:bg-gray-400 dark:hover:bg-gray-600"
 			>
 				Cancel

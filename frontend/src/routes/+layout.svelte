@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { auth } from '$lib/stores/auth';
+	import { auth } from '$lib/stores/auth.svelte';
 	import { selectedUnit, type MassUnit } from '$lib/stores/units';
 	import { goto } from '$app/navigation';
 	import '../app.css';
@@ -7,6 +7,7 @@
 	import { check_login, logout } from '$lib/api';
 	import { page } from '$app/state';
 	import { exportUserDataToFile, importUserDataFromFile } from '$lib/utils';
+	import { resolve } from '$app/paths';
 
 	let { children }: { children: Snippet } = $props();
 
@@ -62,16 +63,16 @@
 
 <nav class="bg-white dark:bg-gray-800 shadow sticky top-0 z-50">
 	<div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
-		{#if $auth.isLoggedIn}
+		{#if auth.isLoggedIn}
 			<div class="flex gap-4">
-				<button onclick={() => goto('/masses')} class={navButtonClasses('/masses')}>
+				<button onclick={() => goto(resolve('/masses'))} class={navButtonClasses('/masses')}>
 					Masses
 				</button>
 			</div>
 		{/if}
 
 		<div class="flex gap-4 items-center">
-			{#if $auth.isLoggedIn}
+			{#if auth.isLoggedIn}
 				<button
 					onclick={logout}
 					class="px-3 py-2 rounded hover:bg-blue-100 dark:hover:bg-gray-700 text-red-500 dark:text-red-500 font-medium"
@@ -92,13 +93,13 @@
 			{:else}
 				<button
 					class="px-3 py-2 rounded hover:bg-blue-100 dark:hover:bg-gray-700 text-blue-700 dark:text-blue-300 font-medium"
-					onclick={() => goto('/login')}
+					onclick={() => goto(resolve('/login'))}
 				>
 					Login
 				</button>
 				<button
 					class="px-3 py-2 rounded hover:bg-blue-100 dark:hover:bg-gray-700 text-blue-700 dark:text-blue-300 font-medium"
-					onclick={() => goto('/signup')}
+					onclick={() => goto(resolve('/signup'))}
 				>
 					Sign Up
 				</button>
