@@ -9,7 +9,7 @@ export async function load({ url }) {
 	console.log('Catch-all route triggered for:', url.pathname);
 	const { user } = await load_user();
 	if (user) {
-		throw redirect(302, '/transactions');
+		throw redirect(302, '/masses');
 	} else {
 		throw redirect(302, '/login');
 	}
