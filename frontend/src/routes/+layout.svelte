@@ -68,6 +68,9 @@
 				<button onclick={() => goto(resolve('/masses'))} class={navButtonClasses('/masses')}>
 					Masses
 				</button>
+				<button onclick={() => goto(resolve('/chart'))} class={navButtonClasses('/chart')}>
+					Mass Chart
+				</button>
 			</div>
 		{/if}
 
