@@ -8,11 +8,17 @@
 	import { resolve } from '$app/paths';
 	import AsyncButton from './AsyncButton.svelte';
 
-	export let mass: Mass;
-	export let showActions: boolean = true;
-
-	export let onEdit: (() => void) | null = null;
-	export let onDelete: (() => void) | null = null;
+	let {
+		mass,
+		showActions = true,
+		onEdit = null,
+		onDelete = null
+	}: {
+		mass: Mass;
+		showActions?: boolean;
+		onEdit?: (() => void) | null;
+		onDelete?: (() => void) | null;
+	} = $props();
 
 	async function handleEdit() {
 		if (onEdit) {

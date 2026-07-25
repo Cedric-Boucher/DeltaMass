@@ -1,9 +1,11 @@
 <script lang="ts">
-	import type { Mass } from '$lib/types';
 	import { selectedUnit, UNIT_LABELS, convertFromKg } from '$lib/stores/units';
 	import * as echarts from 'echarts';
+	import { useAppData } from '$lib/queries';
 
-	let { data }: { data: { masses: Mass[] } } = $props();
+	const appData = useAppData();
+
+	let masses = $derived(appData.data?.masses ?? []);
 
 	let isDark = $state(false);
 	$effect(() => {
@@ -18,7 +20,7 @@
 	});
 
 	let chartData = $derived(
-		[...data.masses]
+		[...masses]
 			.sort(
 				(a, b) =>
 					new Date(a.measurement_timestamp).getTime() - new Date(b.measurement_timestamp).getTime()
@@ -159,7 +161,11 @@
 	</div>
 </div>
 
-{#if chartData.length > 0}
+{#if appData.isPending}
+	<p class="text-gray-500">Loading chart data...</p>
+{:else if appData.isError}
+	<p class="text-red-600">Failed to load chart data.</p>
+{:else if chartData.length > 0}
 	<div
 		class="bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm w-full"
 	>
