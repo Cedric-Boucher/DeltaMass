@@ -44,12 +44,7 @@
 
 <h1>{title}</h1>
 <form onsubmit={(e) => e.preventDefault()} class="space-y-4 max-w-sm">
-	<input
-		bind:value={username}
-		placeholder="Username"
-		required
-		class="w-full p-2 rounded border"
-	/>
+	<input bind:value={username} placeholder="Username" required class="w-full p-2 rounded border" />
 	<input
 		bind:value={password}
 		type="password"

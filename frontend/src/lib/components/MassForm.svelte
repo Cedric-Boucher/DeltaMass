@@ -4,10 +4,11 @@
 	import { get, writable } from 'svelte/store';
 	import { formatTimestampLocal } from '$lib/utils';
 	import { selectedUnit, convertFromKg, convertToKg, type MassUnit } from '$lib/stores/units';
+	import AsyncButton from './AsyncButton.svelte';
 
 	export let initial: Partial<Mass> = {};
 	export let onSubmit: (data: NewMass) => Promise<void>;
-	export let onCancel: () => void;
+	export let onCancel: () => Promise<void>;
 	export let submitLabel = 'Submit';
 	export let showCancel: boolean = false;
 
@@ -112,7 +113,7 @@
 	}
 </script>
 
-<form onsubmit={submit} class="space-y-4 max-w-md">
+<form onsubmit={(e) => e.preventDefault()} class="space-y-4 max-w-md">
 	<div>
 		<label for="mass" class="block font-medium">Mass</label>
 		<div class="flex gap-2">
@@ -166,17 +167,20 @@
 	</div>
 
 	<div class="flex space-x-4">
-		<button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+		<AsyncButton
+			type="submit"
+			action={submit}
+			class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+		>
 			{submitLabel}
-		</button>
+		</AsyncButton>
 		{#if showCancel}
-			<button
-				type="button"
-				onclick={onCancel}
+			<AsyncButton
+				action={onCancel}
 				class="bg-gray-300 dark:bg-gray-700 text-black dark:text-white px-4 py-2 rounded hover:bg-gray-400 dark:hover:bg-gray-600"
 			>
 				Cancel
-			</button>
+			</AsyncButton>
 		{/if}
 	</div>
 	{#if error}
