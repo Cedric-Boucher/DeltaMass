@@ -1,27 +1,29 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { untrack } from 'svelte';
-	import type { Mass } from '$lib/types';
 	import MassCard from '$lib/components/MassCard.svelte';
 	import { resolve } from '$app/paths';
 	import AsyncButton from '$lib/components/AsyncButton.svelte';
+	import { useAppData } from '$lib/queries';
 
-	let { data }: { data: { masses: Mass[] } } = $props();
+	const appData = useAppData();
 
-	const BATCH_SIZE = 100;
+	let masses = $derived(appData.data?.masses ?? []);
+
+	const BATCH_SIZE = 50;
 	const ESTIMATED_ITEM_HEIGHT = 80;
 
 	let limit = $state(BATCH_SIZE);
 
 	function loadMore() {
-		if (limit < data.masses.length) {
+		if (limit < masses.length) {
 			limit += BATCH_SIZE;
 			setTimeout(loadMore, 0);
 		}
 	}
 
 	$effect(() => {
-		if (data.masses) {
+		if (masses.length > 0) {
 			untrack(() => {
 				limit = BATCH_SIZE;
 				if (typeof window !== 'undefined') window.scrollTo(0, 0);
@@ -30,8 +32,8 @@
 		}
 	});
 
-	let visibleMasses = $derived(data.masses.slice(0, limit));
-	let remainingCount = $derived(Math.max(0, data.masses.length - limit));
+	let visibleMasses = $derived(masses.slice(0, limit));
+	let remainingCount = $derived(Math.max(0, masses.length - limit));
 	let phantomHeight = $derived(remainingCount * ESTIMATED_ITEM_HEIGHT);
 </script>
 
@@ -46,7 +48,11 @@
 	</AsyncButton>
 </div>
 
-{#if visibleMasses.length}
+{#if appData.isPending}
+	<p>Loading masses...</p>
+{:else if appData.isError}
+	<p class="text-red-600">Failed to load masses.</p>
+{:else if visibleMasses.length}
 	<ul class="space-y-4">
 		{#each visibleMasses as mass (mass.id)}
 			<MassCard {mass} showActions={true} />

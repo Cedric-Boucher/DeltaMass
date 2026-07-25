@@ -1,31 +1,47 @@
 <script lang="ts">
-	import { onDestroy, onMount } from 'svelte';
+	import { untrack } from 'svelte';
+	import { get } from 'svelte/store';
 	import type { NewMass, Mass } from '$lib/types';
-	import { get, writable } from 'svelte/store';
 	import { formatTimestampLocal } from '$lib/utils';
 	import { selectedUnit, convertFromKg, convertToKg, type MassUnit } from '$lib/stores/units';
+	import { useAppData } from '$lib/queries';
 	import AsyncButton from './AsyncButton.svelte';
 
-	export let initial: Partial<Mass> = {};
-	export let onSubmit: (data: NewMass) => Promise<void>;
-	export let onCancel: () => Promise<void>;
-	export let submitLabel = 'Submit';
-	export let showCancel: boolean = false;
+	let {
+		initial = {},
+		onSubmit,
+		onCancel,
+		submitLabel = 'Submit',
+		showCancel = false
+	}: {
+		initial?: Partial<Mass>;
+		onSubmit: (data: NewMass) => Promise<void>;
+		onCancel: () => Promise<void>;
+		submitLabel?: string;
+		showCancel?: boolean;
+	} = $props();
 
-	let unit: MassUnit = $selectedUnit;
+	const appData = useAppData();
 
-	const initialDisplayMass =
-		initial.mass_kg !== undefined ? convertFromKg(initial.mass_kg, unit).toFixed(2) : '';
+	let unit: MassUnit = $state(untrack(() => get(selectedUnit)));
 
-	const massValue = writable(formatNumberString(initialDisplayMass));
-
-	const hasInitialTimestamp = !!initial.measurement_timestamp;
-	const timestamp = writable(
-		initial.measurement_timestamp ? formatTimestampLocal(initial.measurement_timestamp) : ''
+	let massValue = $state(
+		untrack(() => {
+			const initialDisplayMass =
+				initial.mass_kg !== undefined ? convertFromKg(initial.mass_kg, unit).toFixed(2) : '';
+			return formatNumberString(initialDisplayMass);
+		})
 	);
 
-	let error = '';
-	let timestampTouched = false;
+	const hasInitialTimestamp = untrack(() => !!initial.created_at);
+	let timestamp = $state(
+		untrack(() =>
+			initial.measurement_timestamp ? formatTimestampLocal(initial.measurement_timestamp) : ''
+		)
+	);
+
+	let error = $state('');
+	let timestampTouched = $state(false);
 	let timer: ReturnType<typeof setInterval> | null = null;
 
 	function formatNumberString(value: string): string {
@@ -39,36 +55,39 @@
 	function handleUnitChange(e: Event) {
 		const select = e.target as HTMLSelectElement;
 		const newUnit = select.value as MassUnit;
-		const currentStr = get(massValue);
 
-		if (currentStr && !isNaN(Number(currentStr))) {
-			const currentNum = Number(currentStr);
+		if (massValue && !isNaN(Number(massValue))) {
+			const currentNum = Number(massValue);
 			const asKg = convertToKg(currentNum, unit);
 			const asNew = convertFromKg(asKg, newUnit);
 
-			massValue.set(formatNumberString(asNew.toFixed(2)));
+			massValue = formatNumberString(asNew.toFixed(2));
 		}
 
 		unit = newUnit;
 	}
 
-	onMount(async () => {
+	$effect(() => {
 		if (!hasInitialTimestamp) {
 			const updateTime = () => {
 				if (!timestampTouched) {
 					const now = new Date();
 					const tzOffset = now.getTimezoneOffset() * 60000;
 					const localISO = new Date(now.getTime() - tzOffset).toISOString().slice(0, 19);
-					timestamp.set(localISO);
+					timestamp = localISO;
 				}
 			};
+
 			updateTime();
 			timer = setInterval(updateTime, 1000);
-		}
 
-		onDestroy(() => {
-			if (timer) clearInterval(timer);
-		});
+			return () => {
+				if (timer) {
+					clearInterval(timer);
+					timer = null;
+				}
+			};
+		}
 	});
 
 	const toISOStringIfDefined = (str: string | undefined) =>
@@ -77,15 +96,12 @@
 	async function submit() {
 		error = '';
 
-		const $massValue = get(massValue);
-		const $timestamp = get(timestamp);
-
-		if (!$massValue) {
+		if (!massValue) {
 			error = 'Mass is required.';
 			return;
 		}
 
-		const numericValue = Number($massValue);
+		const numericValue = Number(massValue);
 		const payloadMassKg = convertToKg(numericValue, unit);
 
 		const payload: NewMass = {
@@ -93,7 +109,7 @@
 		};
 
 		if (timestampTouched || hasInitialTimestamp) {
-			payload.measurement_timestamp = toISOStringIfDefined($timestamp || undefined);
+			payload.measurement_timestamp = toISOStringIfDefined(timestamp || undefined);
 		}
 
 		try {
@@ -121,11 +137,11 @@
 				id="mass"
 				type="text"
 				inputmode="numeric"
-				bind:value={$massValue}
+				bind:value={massValue}
 				oninput={(e) => {
 					const input = e.target as HTMLInputElement;
-					massValue.set(formatNumberString(input.value.toString()));
-					input.value = get(massValue);
+					massValue = formatNumberString(input.value.toString());
+					input.value = massValue;
 				}}
 				class="grow p-2 border rounded text-green-800 dark:text-green-200"
 				placeholder="0.0"
@@ -158,7 +174,7 @@
 		<input
 			id="time"
 			type="datetime-local"
-			bind:value={$timestamp}
+			bind:value={timestamp}
 			step="1"
 			class="w-full p-2 border rounded"
 			onfocus={handleTimestampFocusOrInput}
@@ -171,11 +187,13 @@
 			type="submit"
 			action={submit}
 			class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+			disabled={appData.isPending}
 		>
 			{submitLabel}
 		</AsyncButton>
 		{#if showCancel}
 			<AsyncButton
+				type="button"
 				action={onCancel}
 				class="bg-gray-300 dark:bg-gray-700 text-black dark:text-white px-4 py-2 rounded hover:bg-gray-400 dark:hover:bg-gray-600"
 			>
@@ -184,6 +202,6 @@
 		{/if}
 	</div>
 	{#if error}
-		<p class="text-red-600">{error}</p>
+		<p class="text-red-600 font-medium">{error}</p>
 	{/if}
 </form>
