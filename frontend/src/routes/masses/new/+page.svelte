@@ -7,11 +7,11 @@
 
 	async function handleCreate(payload: NewMass) {
 		await createMass(payload);
-		goto(resolve('/masses'));
+		await goto(resolve('/masses'));
 	}
 
-	function cancel() {
-		goto(resolve('/masses'));
+	async function cancel() {
+		await goto(resolve('/masses'));
 	}
 </script>
 

@@ -8,6 +8,7 @@
 	import { page } from '$app/state';
 	import { exportUserDataToFile, importUserDataFromFile } from '$lib/utils';
 	import { resolve } from '$app/paths';
+	import AsyncButton from '$lib/components/AsyncButton.svelte';
 
 	let { children }: { children: Snippet } = $props();
 
@@ -65,47 +66,53 @@
 	<div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
 		{#if auth.isLoggedIn}
 			<div class="flex gap-4">
-				<button onclick={() => goto(resolve('/masses'))} class={navButtonClasses('/masses')}>
+				<AsyncButton
+					action={async () => await goto(resolve('/masses'))}
+					class={navButtonClasses('/masses')}
+				>
 					Masses
-				</button>
-				<button onclick={() => goto(resolve('/chart'))} class={navButtonClasses('/chart')}>
+				</AsyncButton>
+				<AsyncButton
+					action={async () => await goto(resolve('/chart'))}
+					class={navButtonClasses('/chart')}
+				>
 					Mass Chart
-				</button>
+				</AsyncButton>
 			</div>
 		{/if}
 
 		<div class="flex gap-4 items-center">
 			{#if auth.isLoggedIn}
-				<button
-					onclick={logout}
+				<AsyncButton
+					action={logout}
 					class="px-3 py-2 rounded hover:bg-blue-100 dark:hover:bg-gray-700 text-red-500 dark:text-red-500 font-medium"
 				>
 					Logout
-				</button>
+				</AsyncButton>
 
-				<button
-					onclick={importUserDataFromFile}
+				<AsyncButton
+					action={importUserDataFromFile}
 					class="px-3 py-2 rounded hover:bg-blue-100 dark:hover:bg-gray-700 text-blue-700 dark:text-blue-300 font-medium"
-					>Import</button
+					>Import</AsyncButton
 				>
-				<button
-					onclick={exportUserDataToFile}
+				<AsyncButton
+					action={exportUserDataToFile}
 					class="px-3 py-2 rounded hover:bg-blue-100 dark:hover:bg-gray-700 text-blue-700 dark:text-blue-300 font-medium"
-					>Export</button
+					>Export</AsyncButton
 				>
 			{:else}
-				<button
+				<AsyncButton
 					class="px-3 py-2 rounded hover:bg-blue-100 dark:hover:bg-gray-700 text-blue-700 dark:text-blue-300 font-medium"
-					onclick={() => goto(resolve('/login'))}
+					action={async () => await goto(resolve('/login'))}
 				>
 					Login
-				</button>
-				<button
+				</AsyncButton>
+				<AsyncButton
 					class="px-3 py-2 rounded hover:bg-blue-100 dark:hover:bg-gray-700 text-blue-700 dark:text-blue-300 font-medium"
-					onclick={() => goto(resolve('/signup'))}
+					action={async () => await goto(resolve('/signup'))}
 				>
 					Sign Up
-				</button>
+				</AsyncButton>
 			{/if}
 
 			<div class="h-6 w-px bg-gray-300 dark:bg-gray-600 mx-1"></div>

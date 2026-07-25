@@ -33,11 +33,11 @@
 		if (id) {
 			await updateMass(id, data);
 		}
-		goto(resolve(redirectTo));
+		await goto(resolve(redirectTo));
 	}
 
-	function cancel() {
-		goto(resolve(redirectTo));
+	async function cancel() {
+		await goto(resolve(redirectTo));
 	}
 </script>
 

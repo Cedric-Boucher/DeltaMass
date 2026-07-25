@@ -6,6 +6,7 @@
 
 	import { selectedUnit, formatMass, UNIT_LABELS } from '$lib/stores/units';
 	import { resolve } from '$app/paths';
+	import AsyncButton from './AsyncButton.svelte';
 
 	export let mass: Mass;
 	export let showActions: boolean = true;
@@ -13,19 +14,21 @@
 	export let onEdit: (() => void) | null = null;
 	export let onDelete: (() => void) | null = null;
 
-	function handleEdit() {
+	async function handleEdit() {
 		if (onEdit) {
 			onEdit();
 		} else {
-			goto(resolve(`/masses/${mass.id}/edit?redirectTo=${encodeURIComponent(page.url.pathname)}`));
+			await goto(
+				resolve(`/masses/${mass.id}/edit?redirectTo=${encodeURIComponent(page.url.pathname)}`)
+			);
 		}
 	}
 
-	function handleDelete() {
+	async function handleDelete() {
 		if (onDelete) {
 			onDelete();
 		} else {
-			goto(
+			await goto(
 				resolve(`/masses/${mass.id}/delete?redirectTo=${encodeURIComponent(page.url.pathname)}`)
 			);
 		}
@@ -45,20 +48,14 @@
 
 	{#if showActions}
 		<div class="flex flex-col gap-2">
-			<button
-				type="button"
+			<AsyncButton
 				class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-				onclick={handleEdit}
+				action={handleEdit}>Edit</AsyncButton
 			>
-				Edit
-			</button>
-			<button
-				type="button"
+			<AsyncButton
 				class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
-				onclick={handleDelete}
+				action={handleDelete}>Delete</AsyncButton
 			>
-				Delete
-			</button>
 		</div>
 	{/if}
 </li>

@@ -6,6 +6,7 @@
 	import MassCard from '$lib/components/MassCard.svelte';
 	import { resolve } from '$app/paths';
 	import type { Pathname } from '$app/types';
+	import AsyncButton from '$lib/components/AsyncButton.svelte';
 
 	let mass = $state<Mass | null>(null);
 	let error = $state('');
@@ -40,15 +41,15 @@
 			if (id) {
 				await deleteMass(id);
 			}
-			goto(resolve(redirectTo));
+			await goto(resolve(redirectTo));
 		} catch (e) {
 			error = 'Failed to delete mass.';
 			console.error(e);
 		}
 	}
 
-	function cancel() {
-		goto(resolve(redirectTo));
+	async function cancel() {
+		await goto(resolve(redirectTo));
 	}
 </script>
 
@@ -63,18 +64,18 @@
 	<MassCard {mass} showActions={false} />
 
 	<div class="flex space-x-4">
-		<button
-			onclick={confirmDelete}
+		<AsyncButton
+			action={confirmDelete}
 			class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
 		>
 			Yes, Delete
-		</button>
-		<button
-			onclick={cancel}
+		</AsyncButton>
+		<AsyncButton
+			action={cancel}
 			class="bg-gray-300 dark:bg-gray-700 text-black dark:text-white px-4 py-2 rounded hover:bg-gray-400 dark:hover:bg-gray-600"
 		>
 			Cancel
-		</button>
+		</AsyncButton>
 	</div>
 {:else}
 	<p class="text-gray-500 italic">Mass not found.</p>

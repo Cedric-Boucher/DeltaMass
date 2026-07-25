@@ -4,6 +4,7 @@
 	import type { Mass } from '$lib/types';
 	import MassCard from '$lib/components/MassCard.svelte';
 	import { resolve } from '$app/paths';
+	import AsyncButton from '$lib/components/AsyncButton.svelte';
 
 	let { data }: { data: { masses: Mass[] } } = $props();
 
@@ -37,12 +38,12 @@
 <h1 class="text-2xl font-bold mb-4">Masses</h1>
 
 <div class="mb-6 flex items-center gap-4">
-	<button
+	<AsyncButton
 		class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-		onclick={() => goto(resolve('/masses/new'))}
+		action={async () => await goto(resolve('/masses/new'))}
 	>
 		+ New Mass
-	</button>
+	</AsyncButton>
 </div>
 
 {#if visibleMasses.length}
